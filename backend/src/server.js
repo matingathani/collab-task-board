@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 const authRoutes = require('./routes/auth');
 const { router: taskRoutes, setIo } = require('./routes/tasks');
@@ -23,6 +24,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 setIo(io);
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token) {
+    return next(new Error('Authentication error: token required'));
+  }
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    socket.user = user;
+    next();
+  } catch (err) {
+    next(new Error('Authentication error: invalid token'));
+  }
+});
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);

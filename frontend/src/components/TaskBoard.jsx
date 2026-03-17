@@ -17,6 +17,7 @@ export default function TaskBoard({ token, user, onLogout }) {
   useEffect(() => {
     axios.get(`${API_URL}/api/tasks`, { headers }).then((res) => setTasks(res.data));
 
+    socket.auth = { token };
     socket.connect();
 
     socket.on('connect', () => setConnected(true));

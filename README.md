@@ -1,5 +1,7 @@
 # Collab Task Board
 
+![CI](https://github.com/matingathani/collab-task-board/actions/workflows/ci.yml/badge.svg)
+
 A real-time collaborative task management application built with Node.js, Express, Socket.io, PostgreSQL, and React.
 
 ## Features
